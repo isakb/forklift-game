@@ -1,14 +1,82 @@
-
+html {
+    height: 100%;
+}
 body {
-	margin: 0;
-	padding: 0;
-	color: #fff;
-	background: #444;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: #444;
+    height: 100%;
+}
+
+@-webkit-keyframes fadein
+{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadein
+{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadein
+{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes fadein
+{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.loading {
+}
+    .loading #game {
+        opacity: 0;
+    }
+
+
+.loaded {
+}
+    .loaded #game {
+
+        -webkit-animation: fadein 0.4s;
+           -moz-animation: fadein 0.4s;
+             -o-animation: fadein 0.4s;
+                animation: fadein 0.4s;
+
+        /*opacity: 1;*/
+    }
+
+#loader {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 100%;
+    font-size: xx-large;
+    text-align: center;
 }
 
 canvas#game {
-	display: block;
-	margin: 0 auto;
-	/* border: 3px solid #888; */
-	background: #222;
+    display: block;
+    margin: 0 auto;
+    /* border: 3px solid #888; */
+    background: #222;
 }

@@ -44,13 +44,15 @@ lychee.define('game.Main').requires([
 
             var base = this.settings.base;
 
-            var urls = [
-                base + '/img/font_48_white.png',
-                base + '/img/font_32_white.png',
-                base + '/img/font_16_white.png',
-                base + '/img/sprite.png',
-                base + '/json/sprite.json'
-            ];
+            var urls = {
+                headlineFont    : base + '/img/font_48_white.png',
+                normalFont      : base + '/img/font_32_white.png',
+                smallFont       : base + '/img/font_16_white.png',
+                spriteImage     : base + '/img/sprite.png',
+                spriteJson      : base + '/json/sprite.json',
+                playerImage     : base + '/img/player-sprites.png',
+                playerJson      : base + '/json/player-sprites.json'
+            };
 
 
             this.preloader = new lychee.Preloader({
@@ -59,21 +61,23 @@ lychee.define('game.Main').requires([
 
             this.preloader.bind('ready', function(assets) {
 
+                document.body.className = document.body.className.replace('loading', 'loaded');
+
                 this.assets = assets;
 
-                this.fonts.headline = new lychee.Font(assets[urls[0]], {
+                this.fonts.headline = new lychee.Font(assets[urls.headlineFont], {
                     kerning: 0,
                     spacing: 8,
                     map: [15,20,29,38,28,43,33,18,23,24,26,24,18,24,20,31,29,22,29,28,27,27,29,23,31,30,17,18,46,24,46,26,54,25,27,25,26,23,23,29,27,16,22,27,22,36,28,29,23,31,25,27,23,26,25,34,25,24,29,25,30,25,46,30,18,25,27,25,26,23,23,29,27,16,22,27,22,36,28,29,23,31,25,27,23,26,25,34,25,24,29,37,22,37,46]
                 });
 
-                this.fonts.normal = new lychee.Font(assets[urls[1]], {
+                this.fonts.normal = new lychee.Font(assets[urls.normalFont], {
                     kerning: 0,
                     spacing: 8,
                     map: [12,15,21,28,21,30,24,14,17,18,19,18,14,18,15,23,21,17,21,21,20,20,21,18,22,22,14,14,33,18,33,20,38,19,20,19,19,18,18,21,20,13,16,20,16,26,21,21,18,22,19,20,17,20,18,24,19,18,21,18,22,18,33,22,14,19,20,19,19,18,18,21,20,13,16,20,16,26,21,21,18,22,19,20,17,20,18,24,19,18,21,26,17,26,33]
                 });
 
-                this.fonts.small = new lychee.Font(assets[urls[2]], {
+                this.fonts.small = new lychee.Font(assets[urls.smallFont], {
                     kerning: 0,
                     spacing: 8,
                     map: [9,11,14,17,13,18,15,10,12,12,13,12,10,12,11,14,14,11,14,13,13,13,14,12,14,14,10,10,19,12,19,13,22,12,13,12,13,12,12,14,13,9,11,13,11,16,13,14,12,14,12,13,12,13,12,15,12,12,14,12,14,12,19,14,10,12,13,12,13,12,12,14,13,9,11,13,11,16,13,14,12,14,12,13,12,13,12,15,12,12,14,16,11,16,19]
@@ -81,23 +85,28 @@ lychee.define('game.Main').requires([
 
 
                 this.config = {
-                    sprite: assets[urls[4]]
+                    sprite: assets[urls.spriteJson],
+                    player: assets[urls.playerJson]
                 };
 
-                this.config.sprite.image = assets[urls[3]];
-
+                this.config.sprite.image = assets[urls.spriteImage];
+                this.config.player.image = assets[urls.playerImage];
 
                 this.init();
 
             }, this);
 
             this.preloader.bind('error', function(urls) {
-                if (lychee.debug === true) {
+                if (lychee.debug) {
                     console.warn('Preloader error for these urls: ', urls);
                 }
             }, this);
 
-            this.preloader.load(urls);
+
+            this.preloader.load(Object.keys(urls).reduce(function(arr, key) {
+                arr.push(urls[key]);
+                return arr;
+            }, []));
 
         },
 

@@ -29,7 +29,7 @@ lychee.define('game.state.Game').includes([
             var height = this.game.settings.height;
 
             this.__entities.intro = new lychee.ui.Text({
-                text: 'Game State active',
+                text: 'The first day',
                 font: this.game.fonts.normal,
                 position: {
                     x: width / 2,
@@ -39,33 +39,34 @@ lychee.define('game.state.Game').includes([
 
 
             this.__entities.noisehint = new lychee.ui.Text({
-                text: 'Touch to make Noise',
+                text: 'Survive until the coffee break',
                 font: this.game.fonts.small,
                 position: {
                     x: width / 2,
                     y: height + 24
                 }
             });
-
-            this.__entities.exithint = new lychee.ui.Text({
-                text: 'Exit to Menu',
-                font: this.game.fonts.small,
-                position: {
-                    x: width / 2,
-                    y: height + 24
-                }
-            });
-
-            this.__entities.exithint.bind('touch', function() {
-                this.game.setState('menu');
-            }, this);
-
 
             var image = this.game.config.sprite.image;
             var states = this.game.config.sprite.states;
             var map = this.game.config.sprite.map;
 
-
+            this.__entities.player = this.player = new lychee.ui.Sprite({
+                image: this.game.config.player.image,
+                states: this.game.config.player.states,
+                map: this.game.config.player.map,
+                position: {
+                    x: width / 2 - 84,
+                    y: height / 2
+                },
+                state: 'right',
+                animation: {
+                    frame: 0,
+                    frames: 4,
+                    duration: 240,
+                    loop: true
+                }
+            });
 
             this.__entities.spriteA = new lychee.ui.Sprite({
                 image: image,
@@ -174,12 +175,6 @@ lychee.define('game.state.Game').includes([
                 y: height + 24
             });
 
-            this.__entities.exithint.setPosition({
-                x: width / 2,
-                y: height + 24
-            });
-
-
             this.__entities.intro.setTween(1500, {
                 y: height / 2 - 50
             }, lychee.game.Entity.TWEEN.easeOut);
@@ -194,21 +189,19 @@ lychee.define('game.state.Game').includes([
 
             }, this);
 
-
-            this.__loop.timeout(3000, function() {
-
-                this.__entities.exithint.setTween(1000, {
-                    y: height - 50
-                }, lychee.game.Entity.TWEEN.bounceEaseOut);
-
-            }, this);
-
             if (this.game.settings.music) {
                 this.game.jukebox.play('music', true, 0.7);
             }
 
-
             this.__input.bind('touch', this.__processTouch, this);
+
+            this.__input.bind('left', this.__onKeyLeft, this);
+            this.__input.bind('right', this.__onKeyRight, this);
+            this.__input.bind('up', this.__onKeyUp, this);
+            this.__input.bind('down', this.__onKeyDown, this);
+
+            this.__input.bind('space', this.__onKeySpace, this);
+
             this.__renderer.start();
 
         },
@@ -270,6 +263,31 @@ lychee.define('game.state.Game').includes([
             }
 
         },
+
+        __onKeyLeft: function(position, delta) {
+
+            if (this.player.state === 'left') return;
+
+            this.player.setState('left');
+
+            if (this.game.settings.sound) {
+                this.game.jukebox.play('click', 0.3);
+            }
+
+        },
+
+        __onKeyRight: function(position, delta) {
+
+            if (this.player.state === 'right') return;
+
+            this.player.setState('right');
+
+            if (this.game.settings.sound) {
+                this.game.jukebox.play('click', 0.3);
+            }
+
+        },
+
 
         __getEntityByPosition: function(x, y) {
 
