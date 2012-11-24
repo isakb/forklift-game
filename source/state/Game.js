@@ -203,6 +203,10 @@ lychee.define('game.state.Game').includes([
 
             }, this);
 
+            if (this.game.settings.music) {
+                this.game.jukebox.play('music', true, 0.7);
+            }
+
 
             this.__input.bind('touch', this.__processTouch, this);
             this.__renderer.start();
@@ -247,7 +251,7 @@ lychee.define('game.state.Game').includes([
 
         __processTouch: function(position, delta) {
 
-            if (this.__locked === true) return;
+            if (this.__locked) return;
 
             var offset = this.game.getOffset();
 
@@ -261,7 +265,7 @@ lychee.define('game.state.Game').includes([
             }
 
 
-            if (this.game.settings.sound === true) {
+            if (this.game.settings.sound) {
                 this.game.jukebox.play('click');
             }
 

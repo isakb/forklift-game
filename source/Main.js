@@ -107,7 +107,7 @@ lychee.define('game.Main').requires([
 
             var env = this.renderer.getEnvironment();
 
-            if (this.settings.fullscreen === true) {
+            if (this.settings.fullscreen) {
                 this.settings.width = env.screen.width;
                 this.settings.height = env.screen.height;
             } else {

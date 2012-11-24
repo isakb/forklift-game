@@ -63,7 +63,7 @@ lychee.define('game.DeviceSpecificHacks').exports(function(lychee, global) {
 
 				if (that.jukebox) {
 
-					if (that.jukebox.isPlaying('music') === true) {
+					if (that.jukebox.isPlaying('music')) {
 						that.jukebox.stop('music');
 						that.__autoPausedPlayback = true;
 					}
@@ -74,7 +74,7 @@ lychee.define('game.DeviceSpecificHacks').exports(function(lychee, global) {
 
 			global.addEventListener('pageshow', function() {
 
-				if (that.__autoPausedPlayback === true) {
+				if (that.__autoPausedPlayback) {
 					that.jukebox.play('music', true);
 					that.__autoPausedPlayback = false;
 				}
