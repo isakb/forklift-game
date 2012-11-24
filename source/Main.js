@@ -1,3 +1,4 @@
+/*global lychee game console */
 
 lychee.define('game.Main').requires([
     'lychee.Font',

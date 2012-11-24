@@ -1,3 +1,4 @@
+/*global lychee */
 
 lychee.define('game.Jukebox').includes([
     'lychee.game.Jukebox'

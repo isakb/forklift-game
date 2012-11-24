@@ -1,3 +1,4 @@
+/*global lychee */
 
 lychee.define('game.Renderer').includes([
     'lychee.ui.Renderer'

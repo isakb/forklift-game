@@ -1,3 +1,4 @@
+/*global lychee */
 
 lychee.define('game.Scene').requires([
     'lychee.ui.Text',
