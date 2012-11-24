@@ -1,0 +1,3 @@
+[submodule "vendor/lychee"]
+	path = vendor/lychee
+	url = git://github.com/martensms/lycheeJS
