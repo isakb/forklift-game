@@ -193,14 +193,14 @@ lychee.define('game.state.Game').includes([
                 this.game.jukebox.play('music', true, 0.7);
             }
 
-            this.__input.bind('touch', this.__processTouch, this);
-
             this.__input.bind('left', this.__onKeyLeft, this);
             this.__input.bind('right', this.__onKeyRight, this);
             this.__input.bind('up', this.__onKeyUp, this);
             this.__input.bind('down', this.__onKeyDown, this);
 
             this.__input.bind('space', this.__onKeySpace, this);
+
+            this.__input.bind('esc', this.__onKeyEsc, this);
 
             this.__renderer.start();
 
@@ -209,6 +209,15 @@ lychee.define('game.state.Game').includes([
         leave: function() {
 
             this.__renderer.stop();
+            this.__input.unbind('left', this.__onKeyLeft);
+            this.__input.unbind('right', this.__onKeyRight);
+            this.__input.unbind('up', this.__onKeyUp);
+            this.__input.unbind('down', this.__onKeyDown);
+
+            this.__input.unbind('space', this.__onKeySpace);
+
+            this.__input.unbind('esc', this.__onKeyEsc);
+
             this.__input.unbind('touch', this.__processTouch);
 
 
@@ -264,7 +273,9 @@ lychee.define('game.state.Game').includes([
 
         },
 
-        __onKeyLeft: function(position, delta) {
+        __onKeyLeft: function(position, event) {
+
+            event.preventDefault();
 
             if (this.player.state === 'left') return;
 
@@ -276,7 +287,9 @@ lychee.define('game.state.Game').includes([
 
         },
 
-        __onKeyRight: function(position, delta) {
+        __onKeyRight: function(position, event) {
+
+            event.preventDefault();
 
             if (this.player.state === 'right') return;
 
@@ -284,6 +297,45 @@ lychee.define('game.state.Game').includes([
 
             if (this.game.settings.sound) {
                 this.game.jukebox.play('click', 0.3);
+            }
+
+        },
+
+        __onKeyUp: function(position, event) {
+
+            event.preventDefault();
+
+            if (this.player.state === 'up') return;
+
+            this.player.setState('up');
+
+            if (this.game.settings.sound) {
+                this.game.jukebox.play('click', 0.3);
+            }
+
+        },
+
+        __onKeyDown: function(position, event) {
+
+            event.preventDefault();
+
+            if (this.player.state === 'down') return;
+
+            this.player.setState('down');
+
+            if (this.game.settings.sound) {
+                this.game.jukebox.play('click', 0.3);
+            }
+
+        },
+
+
+        __onKeySpace: function(position, event) {
+
+            event.preventDefault();
+
+            if (this.game.settings.sound) {
+                this.game.jukebox.play('thump', 1);
             }
 
         },
