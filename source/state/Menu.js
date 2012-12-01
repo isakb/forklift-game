@@ -127,30 +127,30 @@ lychee.define('game.state.Menu').requires([
 
             this.__scene.add(entity, this.__settings);
 
-            entity = new lychee.ui.Text({
-                text: 'Fullscreen: ' + (this.game.settings.fullscreen ? 'On' : 'Off'),
-                font: this.game.fonts.normal,
-                layout: {
-                    position: 'absolute',
-                    x: 0,
-                    y: -24
-                }
-            });
+            // entity = new lychee.ui.Text({
+            //     text: 'Fullscreen: ' + (this.game.settings.fullscreen ? 'On' : 'Off'),
+            //     font: this.game.fonts.normal,
+            //     layout: {
+            //         position: 'absolute',
+            //         x: 0,
+            //         y: -24
+            //     }
+            // });
 
-            entity.bind('touch', function(entity) {
+            // entity.bind('touch', function(entity) {
 
-                this.game.settings.fullscreen = this.game.settings.fullscreen ? false : true;
+            //     this.game.settings.fullscreen = this.game.settings.fullscreen ? false : true;
 
-                entity.set('Fullscreen: ' + (this.game.settings.fullscreen ? 'On' : 'Off'));
+            //     entity.set('Fullscreen: ' + (this.game.settings.fullscreen ? 'On' : 'Off'));
 
-                this.game.reset();
-                this.reset();
+            //     this.game.reset();
+            //     this.reset();
 
-                this.__scene.scrollTo(this.__settings);
+            //     this.__scene.scrollTo(this.__settings);
 
-            }, this);
+            // }, this);
 
-            this.__scene.add(entity, this.__settings);
+            // this.__scene.add(entity, this.__settings);
 
             entity = new lychee.ui.Text({
                 text: 'Music: ' + (this.game.settings.music ? 'On' : 'Off'),

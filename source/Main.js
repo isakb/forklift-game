@@ -36,8 +36,8 @@ lychee.define('game.Main').requires([
             fullscreen: false,
             renderFps: 60,
             updateFps: 60,
-            width: 640 ,
-            height: 480
+            width: 800 ,
+            height: 600
         },
 
         load: function() {
@@ -50,21 +50,20 @@ lychee.define('game.Main').requires([
                 smallFont       : base + '/img/font_16_white.png',
                 spriteImage     : base + '/img/sprite.png',
                 spriteJson      : base + '/json/sprite.json',
+                forkImage       : base + '/img/fork.png',
+                forkJson        : base + '/json/fork-sprites.json',
                 playerImage     : base + '/img/player-sprites.png',
                 playerJson      : base + '/json/player-sprites.json',
-                levels: _([
-                    '01',
-                    '02'
-                    ]).reduce(function(arr, level) {
-                        arr.push({
-                            image: base + '/img/l' + level + '.png',
-                            json:  base + '/json/l' + level + '.png'
-                        });
-                        return arr;
-                    }, [])
-
+                levels: {}
             };
-
+            _.each(['01', '02'], function(level) {
+                urls.levels[level] = {
+                    bg1:   base + '/img/l' + level + '/bg1.png',
+                    bg2:   base + '/img/l' + level + '/bg2.png',
+                    tiles: base + '/img/l' + level + '/tiles.png',
+                    json:  base + '/json/l' + level + '.json'
+                };
+            });
 
             this.preloader = new lychee.Preloader({
                 timeout: 3000
@@ -97,12 +96,18 @@ lychee.define('game.Main').requires([
 
                 this.config = {
                     sprite: assets[urls.spriteJson],
-                    player: assets[urls.playerJson]
+                    player: assets[urls.playerJson],
+                    fork: assets[urls.forkJson],
+                    levels: {}
                 };
 
                 this.config.sprite.image = assets[urls.spriteImage];
                 this.config.player.image = assets[urls.playerImage];
+                this.config.fork.image = assets[urls.forkImage];
 
+                _.each(urls.levels, function(val, name) {
+                    this.config.levels[name] = assets[urls.levels[name].json];
+                }, this);
 
                 this.init();
 
@@ -113,7 +118,6 @@ lychee.define('game.Main').requires([
                     console.warn('Preloader error for these urls: ', urls);
                 }
             }, this);
-
 
             this.preloader.load(this.__getUrlsFromObject(urls));
 
@@ -144,7 +148,6 @@ lychee.define('game.Main').requires([
                 this.settings.height = this.defaults.height;
             }
 
-
             this.renderer.reset(this.settings.width, this.settings.height, false);
 
             this.__offset = env.offset; // Linked
@@ -165,9 +168,7 @@ lychee.define('game.Main').requires([
 
             this.renderer.setBackground("#ffffff");
 
-
             this.reset();
-
 
             this.jukebox = new game.Jukebox(this);
 
@@ -181,7 +182,6 @@ lychee.define('game.Main').requires([
                 game:    new game.state.Game(this),
                 menu:    new game.state.Menu(this)
             };
-
 
             this.setState('menu');
 

@@ -1,6 +1,12 @@
-/*global lychee */
+/*global lychee game _ console*/
 
-lychee.define('game.state.Game').includes([
+lychee.define('game.state.Game').requires([
+    'lychee.game.Sprite',
+    'game.entity.Player',
+    'game.entity.Enemy',
+    'game.entity.Fork',
+    'game.entity.Exit'
+]).includes([
     'lychee.game.State'
 ]).exports(function(lychee, global) {
 
@@ -13,7 +19,12 @@ lychee.define('game.state.Game').includes([
         this.__renderer = this.game.renderer;
 
         this.__clock = 0;
+        this.__skyboxEntity = null;
+        this.__backgroundEntity = null;
         this.__entities = {};
+        this.__player = null;
+        this.__forks = [];
+        this.__exit = null;
         this.__locked = false;
 
         this.reset();
@@ -25,136 +36,14 @@ lychee.define('game.state.Game').includes([
 
         reset: function() {
 
+            this.__level = '01';
+
             var width = this.game.settings.width;
             var height = this.game.settings.height;
-
-            // this.__entities.intro = new lychee.ui.Text({
-            //     text: 'The first day',
-            //     font: this.game.fonts.normal,
-            //     position: {
-            //         x: width / 2,
-            //         y: -200
-            //     }
-            // });
-
-
-            // this.__entities.noisehint = new lychee.ui.Text({
-            //     text: 'Survive until the coffee break',
-            //     font: this.game.fonts.small,
-            //     position: {
-            //         x: width / 2,
-            //         y: height + 24
-            //     }
-            // });
 
             var image = this.game.config.sprite.image;
             var states = this.game.config.sprite.states;
             var map = this.game.config.sprite.map;
-
-
-            this.__entities.player = this.player = new lychee.ui.Sprite({
-                image: this.game.config.player.image,
-                states: this.game.config.player.states,
-                map: this.game.config.player.map,
-                position: {
-                    x: width / 2,
-                    y: height / 2
-                },
-                shape: lychee.game.Entity.SHAPE.rectangle,
-                collision: lychee.game.Entity.COLLISION.A,
-                state: 'right',
-                animation: {
-                    frame: 0,
-                    frames: 4,
-                    duration: 240,
-                    loop: true
-                }
-            });
-
-            // this.__entities.spriteA = new lychee.ui.Sprite({
-            //     image: image,
-            //     states: states,
-            //     map: map,
-            //     position: {
-            //         x: width / 2 - 84,
-            //         y: height / 2
-            //     },
-            //     state: 'first',
-            //     animation: {
-            //         frame: 0,
-            //         frames: 6,
-            //         duration: 24000,
-            //         loop: true
-            //     }
-            // });
-
-            // this.__entities.spriteB = new lychee.ui.Sprite({
-            //     image: image,
-            //     states: states,
-            //     map: map,
-            //     position: {
-            //         x: width / 2 - 42,
-            //         y: height / 2
-            //     },
-            //     state: 'second',
-            //     animation: {
-            //         frame: 0,
-            //         frames: 6,
-            //         duration: 12000,
-            //         loop: true
-            //     }
-            // });
-
-            // this.__entities.spriteC = new lychee.ui.Sprite({
-            //     image: image,
-            //     states: states,
-            //     map: map,
-            //     position: {
-            //         x: width / 2,
-            //         y: height / 2
-            //     },
-            //     state: 'third',
-            //     animation: {
-            //         frame: 0,
-            //         frames: 6,
-            //         duration: 6000,
-            //         loop: true
-            //     }
-            // });
-
-            // this.__entities.spriteD = new lychee.ui.Sprite({
-            //     image: image,
-            //     states: states,
-            //     map: map,
-            //     position: {
-            //         x: width / 2 + 42,
-            //         y: height / 2
-            //     },
-            //     state: 'fourth',
-            //     animation: {
-            //         frame: 0,
-            //         frames: 6,
-            //         duration: 3000,
-            //         loop: true
-            //     }
-            // });
-
-            // this.__entities.spriteE = new lychee.ui.Sprite({
-            //     image: image,
-            //     states: states,
-            //     map: map,
-            //     position: {
-            //         x: width / 2 + 84,
-            //         y: height / 2
-            //     },
-            //     state: 'fifth',
-            //     animation: {
-            //         frame: 0,
-            //         frames: 6,
-            //         duration: 1000,
-            //         loop: true
-            //     }
-            // });
 
         },
 
@@ -164,33 +53,10 @@ lychee.define('game.state.Game').includes([
 
             this.__locked = true;
 
+            this.__enterLevel(this.__level);
 
             var width = this.game.settings.width;
             var height = this.game.settings.height;
-
-            // this.__entities.intro.setPosition({
-            //     x: width / 2,
-            //     y: -200
-            // });
-
-            // this.__entities.noisehint.setPosition({
-            //     x: width / 2,
-            //     y: height + 24
-            // });
-
-            // this.__entities.intro.setTween(1500, {
-            //     y: height / 2 - 50
-            // }, lychee.game.Entity.TWEEN.easeOut);
-
-            // this.__loop.timeout(1000, function() {
-
-            //     this.__locked = false;
-
-            //     this.__entities.noisehint.setTween(500, {
-            //         y: height / 2 + 50
-            //     }, lychee.game.Entity.TWEEN.easeOut);
-
-            // }, this);
 
             if (this.game.settings.music) {
                 this.game.jukebox.play('music', true, 0.7);
@@ -217,15 +83,14 @@ lychee.define('game.state.Game').includes([
 
             this.__input.unbind('space', this.__onKeySpace);
 
-
-            // this.__input.unbind('touch', this.__processTouch);
-
-
             lychee.game.State.prototype.leave.call(this);
 
         },
 
         update: function(clock, delta) {
+
+
+            this.__player.update(clock, delta);
 
             for (var e in this.__entities) {
                 if (this.__entities[e] === null) continue;
@@ -238,137 +103,206 @@ lychee.define('game.state.Game').includes([
 
         render: function(clock, delta) {
 
+            var entity;
+
             this.__renderer.clear();
 
+            this.__renderer.moveCameraTo(this.__player);
 
-            for (var e in this.__entities) {
-                if (this.__entities[e] === null) continue;
-                this.__renderer.renderUIEntity(this.__entities[e]);
+            this.__renderer.renderParallaxBackground(this.__skyboxEntity, this.__player);
+
+            this.__renderer.renderParallaxBackground(this.__backgroundEntity, this.__player);
+
+
+            for (var layer in this.__layers) {
+                this.__renderer.renderLayer(this.__layers[layer]);
             }
 
+            this.__renderer.renderPlayer(this.__player);
+
+            for (var e in this.__entities) {
+                entity = this.__entities[e];
+
+                if (entity === null) {
+                    continue;
+                } else if (entity.type) {
+                    this.__renderer['render' + entity.type](entity);
+                } else {
+                    this.__renderer.renderUIEntity(this.__entities[e]);
+                }
+            }
 
             this.__renderer.flush();
 
         },
 
-        // __processTouch: function(position, delta) {
 
-        //     if (this.__locked) return;
+        __enterLevel: function(level) {
 
-        //     var offset = this.game.getOffset();
+            var levelConfig = this.game.config.levels[level];
 
-        //     position.x -= offset.x;
-        //     position.y -= offset.y;
+            console.log('Making level %s (%s)', level, levelConfig.properties.title);
 
+            var assets = this.game.assets;
 
-        //     var entity = this.__getEntityByPosition(position.x, position.y);
-        //     if (entity !== null) {
-        //         entity.trigger('touch', [ entity ]);
-        //     }
+            var LEVEL_IMG_PREFIX = './asset/img/l';
 
+            var width = this.game.settings.width;
+            var height = this.game.settings.height;
 
-        //     if (this.game.settings.sound) {
-        //         this.game.jukebox.play('click');
-        //     }
+            var tileImage = assets[LEVEL_IMG_PREFIX + level + '/tiles.png'];
 
-        // },
+            this.__skyboxEntity = new lychee.game.Sprite({
+                image: assets[LEVEL_IMG_PREFIX + level + '/bg1.png']
+            });
+            this.__skyboxEntity.parallax = 0.05;
 
-        __onKeyLeft: function(position, event) {
+            this.__backgroundEntity = new lychee.game.Sprite({
+                image: assets[LEVEL_IMG_PREFIX + level + '/bg2.png']
+            });
+            this.__backgroundEntity.parallax = 0.2;
 
-            event.preventDefault();
+            this.__exit = new game.entity.Exit();
 
-            if (this.player.state === 'left') return;
+            this.__player = new game.entity.Player({
+                image: this.game.config.player.image,
+                state: this.game.config.player.states,
+                map: this.game.config.player.map
+            }, this.game, this);
 
-            this.player.setState('left');
+            var tileWidth = levelConfig.tilewidth;
+            var tileHeight = levelConfig.tileheight;
+            var tileSets = levelConfig.tilesets;
+            var layers = levelConfig.layers;
 
-            if (this.game.settings.sound) {
-                this.game.jukebox.play('click', 0.3);
+            _.each(layers, function(layer) {
+                this.__makeLayer(layer);
+            }, this);
+
+            this.__locked = false;
+
+            this.__entities.title = new lychee.ui.Text({
+                text: levelConfig.properties.title,
+                font: this.game.fonts.normal,
+                position: {
+                    x: width / 2,
+                    y: -200
+                }
+            });
+
+            this.__entities.description = new lychee.ui.Text({
+                text: levelConfig.properties.description,
+                font: this.game.fonts.small,
+                position: {
+                    x: width / 2,
+                    y: height + 24
+                }
+            });
+
+            this.__entities.title.setTween(1500, {
+                y: height / 2 - 100
+            }, lychee.game.Entity.TWEEN.easeOut);
+
+            this.__loop.timeout(1000, function() {
+                this.__entities.description.setTween(500, {
+                    y: height / 2 + 100
+                }, lychee.game.Entity.TWEEN.easeOut);
+
+            }, this);
+
+            this.__loop.timeout(3000, function() {
+                this.__entities.title.setTween(500, {
+                    x: -1000
+                }, lychee.game.Entity.TWEEN.easeIn);
+
+                this.__entities.description.setTween(500, {
+                    x: -1000
+                }, lychee.game.Entity.TWEEN.easeIn);
+
+            }, this);
+
+        },
+
+        __makeLayer: function(layer) {
+
+            switch(layer.type) {
+                case 'tilelayer':
+                    if (layer.name === 'collision') {
+                        this.__collisionLayer = layer.data;
+                    }
+                    break;
+
+                case 'objectgroup':
+                    if (layer.name === 'enemy_entities') {
+                        this.__addEnemies(layer.objects);
+                    } else if (layer.name === 'entities') {
+                        this.__addEntities(layer.objects);
+                    }
+                    break;
+
+                default:
+                    console.info('Ignoring layer: ' + layer.name);
             }
 
+
+        },
+
+        __addEntities: function(entities) {
+            _.each(entities, function(entity) {
+                if (entity.type === 'Player') {
+                    this.__player.setPosition({x: entity.x, y: entity.y});
+                } else if (entity.type === 'Exit') {
+                    // Let's limit it to one exit per level for now.
+                    this.__exit.setPosition({x: entity.x, y: entity.y});
+                } else {
+                    console.warn('Ignored map entity: ' + entity.type);
+                }
+
+            }, this);
+        },
+
+        __addEnemies: function(entities) {
+            _.each(entities, function(entity) {
+                var Klass = game.entity[entity.type];
+                this.__entities[entity.name] = new Klass(entity.properties);
+
+            }, this);
+        },
+
+        shootFork: function(position, addSpeed) {
+            this.__forks.push(new game.entity.Fork({
+                x: position.x,
+                y: position.y,
+                dx: addSpeed.x * 4,
+                dy: addSpeed.y
+            }, this.game));
+        },
+
+
+        __onKeyLeft: function(position, event) {
+            event.preventDefault();
+            this.__player.goLeft();
         },
 
         __onKeyRight: function(position, event) {
-
             event.preventDefault();
-
-            if (this.player.state === 'right') return;
-
-            this.player.setState('right');
-
-            if (this.game.settings.sound) {
-                this.game.jukebox.play('click', 0.3);
-            }
-
+            this.__player.goRight();
         },
 
         __onKeyUp: function(position, event) {
-
             event.preventDefault();
-
-            if (this.player.state === 'up') return;
-
-            this.player.setState('up');
-
-            if (this.game.settings.sound) {
-                this.game.jukebox.play('click', 0.3);
-            }
-
+            this.__player.goUp();
         },
 
         __onKeyDown: function(position, event) {
-
             event.preventDefault();
-
-            if (this.player.state === 'down') return;
-
-            this.player.setState('down');
-
-            if (this.game.settings.sound) {
-                this.game.jukebox.play('click', 0.3);
-            }
-
+            this.__player.goDown();
         },
 
-
         __onKeySpace: function(position, event) {
-
             event.preventDefault();
-
-            if (this.game.settings.sound) {
-                this.game.jukebox.play('thump', 1);
-            }
-
+            this.__player.shoot();
         }
-
-
-        // __getEntityByPosition: function(x, y) {
-
-        //     var found = null;
-
-        //     for (var e in this.__entities) {
-
-        //         if (this.__entities[e] === null) continue;
-
-        //         var entity = this.__entities[e];
-        //         var position = entity.getPosition();
-
-        //         if (
-        //             x >= position.x - entity.width / 2 &&
-        //             x <= position.x + entity.width / 2 &&
-        //             y >= position.y - entity.height / 2 &&
-        //             y <= position.y + entity.height / 2
-        //         ) {
-        //             found = entity;
-        //             break;
-        //         }
-
-
-        //     }
-
-
-        //     return found;
-
-        // }
 
     };
 

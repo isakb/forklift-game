@@ -3,6 +3,13 @@
 
 	"tree": {
 
+		"entity": {
+			"Enemy": [ "js" ],
+			"Exit": [ "js" ],
+			"Fork": [ "js" ],
+			"Player": [ "js"]
+		},
+
 		"state": {
 			"Game": [ "js" ],
 			"Menu": [ "js" ]
@@ -10,9 +17,11 @@
 
 		"DeviceSpecificHacks": [ "js" ],
 		"Jukebox": [ "js" ],
+		"Layer": [ "js" ],
 		"Main": [ "js", "css" ],
 		"Renderer": [ "js" ],
-		"Scene": [ "js" ]
+		"Scene": [ "js" ],
+		"Score": [ "js" ]
 
 	}
 }

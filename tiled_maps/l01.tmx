@@ -1,8 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="192" height="40" tilewidth="32" tileheight="32">
- <layer name="Tile Layer 1" width="192" height="40">
+<map version="1.0" orientation="orthogonal" width="80" height="30" tilewidth="16" tileheight="16">
+ <properties>
+  <property name="description" value="Find your way to work"/>
+  <property name="title" value="Intro level"/>
+ </properties>
+ <tileset firstgid="1" name="arctic" tilewidth="16" tileheight="16">
+  <image source="../asset/img/l01/tiles.png" trans="ff00ff" width="256" height="192"/>
+ </tileset>
+ <tileset firstgid="193" name="metatiles" tilewidth="32" tileheight="32">
+  <image source="metatiles.png" width="192" height="128"/>
+ </tileset>
+ <imagelayer name="parallax_layer1" width="80" height="30">
+  <image source="../asset/img/l01/bg1.png"/>
+  <properties>
+   <property name="ratio" value="0.10"/>
+  </properties>
+ </imagelayer>
+ <imagelayer name="parallax_layer2" width="80" height="30">
+  <image source="../asset/img/l01/bg2.png"/>
+  <properties>
+   <property name="ratio" value="0.25"/>
+  </properties>
+ </imagelayer>
+ <layer name="background" width="80" height="30">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T+1vBqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA3eAAAAQ==
+   eJzt1MkNgDAAA8H0x/nn7L8KXEMUAVJmpP24AJcCAAAAAECNIY1pSnNa0lqx92pLezrSma50V+zwpVY/8Lf9La1+4G87AAB9eQD0HDAZ
+  </data>
+ </layer>
+ <objectgroup name="entities" width="80" height="30">
+  <object name="player" type="Player" x="190" y="173" width="144" height="96">
+   <properties>
+    <property name="state" value="right"/>
+   </properties>
+  </object>
+  <object name="exit" type="Exit" x="1208" y="255" width="63" height="63">
+   <properties>
+    <property name="next" value="02"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#a40000" name="enemy_entities" width="80" height="30">
+  <object name="enemy1" type="Enemy" x="581" y="254" width="279" height="64">
+   <properties>
+    <property name="health" value="20"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="foreground" width="80" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAB4DCWAAAE=
+  </data>
+ </layer>
+ <layer name="collision" width="80" height="30" opacity="0.68">
+  <data encoding="base64" compression="zlib">
+   eJzt1DENAAAIwDD8u8IZJgiB0D5zsAgAAAAAAJiXTQXu6vrAtgIA8EsBwlgbJQ==
   </data>
  </layer>
 </map>

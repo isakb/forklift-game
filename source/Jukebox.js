@@ -16,6 +16,7 @@ lychee.define('game.Jukebox').includes([
         var tracks = [
             'music',
             'click',
+            'fork',
             'thump'
         ];
 
