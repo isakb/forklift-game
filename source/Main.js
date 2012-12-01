@@ -1,4 +1,4 @@
-/*global lychee game console document */
+/*global lychee game console document _*/
 
 lychee.define('game.Main').requires([
     'lychee.Font',
@@ -51,7 +51,18 @@ lychee.define('game.Main').requires([
                 spriteImage     : base + '/img/sprite.png',
                 spriteJson      : base + '/json/sprite.json',
                 playerImage     : base + '/img/player-sprites.png',
-                playerJson      : base + '/json/player-sprites.json'
+                playerJson      : base + '/json/player-sprites.json',
+                levels: _([
+                    '01',
+                    '02'
+                    ]).reduce(function(arr, level) {
+                        arr.push({
+                            image: base + '/img/l' + level + '.png',
+                            json:  base + '/json/l' + level + '.png'
+                        });
+                        return arr;
+                    }, [])
+
             };
 
 
@@ -92,6 +103,7 @@ lychee.define('game.Main').requires([
                 this.config.sprite.image = assets[urls.spriteImage];
                 this.config.player.image = assets[urls.playerImage];
 
+
                 this.init();
 
             }, this);
@@ -103,11 +115,19 @@ lychee.define('game.Main').requires([
             }, this);
 
 
-            this.preloader.load(Object.keys(urls).reduce(function(arr, key) {
-                arr.push(urls[key]);
-                return arr;
-            }, []));
+            this.preloader.load(this.__getUrlsFromObject(urls));
 
+        },
+
+        __getUrlsFromObject: function(obj) {
+            return _(obj).reduce(function(arr, val, key) {
+                if (_.isString(val)) {
+                    arr.push(val);
+                } else {
+                    arr = arr.concat(this.__getUrlsFromObject(val));
+                }
+                return arr;
+            }, [], this);
         },
 
         reset: function() {
