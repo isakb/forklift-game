@@ -8,7 +8,7 @@
   <image source="../asset/img/l01/tiles.png" trans="ff00ff" width="256" height="192"/>
  </tileset>
  <tileset firstgid="193" name="metatiles" tilewidth="32" tileheight="32">
-  <image source="metatiles.png" width="192" height="128"/>
+  <image source="../asset/img/metatiles.png" width="192" height="128"/>
  </tileset>
  <imagelayer name="parallax_layer1" width="80" height="30">
   <image source="../asset/img/l01/bg1.png"/>
@@ -24,7 +24,7 @@
  </imagelayer>
  <layer name="background" width="80" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1MkNgDAAA8H0x/nn7L8KXEMUAVJmpP24AJcCAAAAAECNIY1pSnNa0lqx92pLezrSma50V+zwpVY/8Lf9La1+4G87AAB9eQD0HDAZ
+   eJzt2TkKgDAURdG/gKjZl2PvuP9V+GqJGEJQ0XvgNq/8BBudmRWqVJXyygU2hIVuddy457mYt8f9roVu5I17xXDGGwMAAAAAAOlq1ahWdapXQ8L+V6Oa1KwWtaotYQeelOs78Lb9Lrm+A2/bAXwD/5AAALF2So0zOg==
   </data>
  </layer>
  <objectgroup name="entities" width="80" height="30">
