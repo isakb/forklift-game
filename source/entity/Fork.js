@@ -1,9 +1,9 @@
-/*global lychee */
+/*global lychee _ */
 
 lychee.define('game.entity.Fork').requires([
     'lychee.game.Entity'
 ]).includes([
-    'lychee.game.Sprite'
+    'lychee.ui.Sprite'
 ]).exports(function(lychee, global) {
 
     var Class = function(settings, game) {
@@ -12,31 +12,23 @@ lychee.define('game.entity.Fork').requires([
 
         this.game = game;
 
-        lychee.game.Sprite.call(this, settings);
+        lychee.ui.Sprite.call(this, _.merge({
+            animation: {
+                frame: 0,
+                frames: 2,
+                duration: 150,
+                loop: true
+            },
+            shape: lychee.game.Entity.SHAPE.circle,
+            collission: lychee.game.Entity.COLLISION.A,
+            state: settings.dx > 0 ? 'right' : 'left'
 
-        this.__shape = lychee.game.Entity.SHAPE.circle;
-
-        this.__collision = lychee.game.Entity.COLLISION.A;
-
-        this.__image = game.config.fork.image;
-        this.__states = game.config.fork.states;
-        this.__map = game.config.fork.map;
-
-        this.__state = 'right';
-
+        }, game.config.fork, settings));
 
         this.__speed = {
-            x: 0,
-            y: 0
+            x: settings.dx,
+            y: settings.dy
         };
-
-        this.__animation = {
-            frame: 0,
-            frames: 2,
-            duration: 100,
-            loop: true
-        };
-
 
         this.__fly();
 
@@ -47,29 +39,23 @@ lychee.define('game.entity.Fork').requires([
 
 
         update: function(clock, delta) {
-            var newPosition = {
-                x: this.__position.x + this.__speed.x * delta,
-                y: this.__position.y + this.__speed.y * delta,
-                z: this.__position.z
-            };
 
-            // TODO: check if new position is valid or collides
+            lychee.ui.Sprite.prototype.update.call(this, clock, delta);
 
-            this.__position = newPosition;
+            this.__fly();
+
+            this.__position.x += this.__speed.x * delta;
+            this.__position.y += this.__speed.y * delta;
         },
 
         __fly: function() {
-            var newSpeed = {
-                x: this.__speed.x * 0.9,
-                // gravity
-                y: this.__speed.y + 0.01
-            };
-            this.__speed = newSpeed;
+            this.__speed.x *= 1.02; // use the fork, luke
+            this.__speed.y = (this.__speed.y + 0.02) * 0.99;
         },
 
         __checkIfCollidesWithEnemy: function(enemy) {
             return this.collidesWith(enemy);
-        },
+        }
 
 
     };

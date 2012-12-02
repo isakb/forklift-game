@@ -3,35 +3,36 @@
 lychee.define('game.entity.Player').requires([
     'lychee.game.Entity'
 ]).includes([
-    'lychee.game.Sprite'
+    'lychee.ui.Sprite'
 ]).exports(function(lychee, global) {
 
-    var Class = function(settings, game, owner) {
+    var Class = function(game, owner) {
 
         this.__lastStateId = null;
 
         this.game = game;
 
-        this.__owner = owner;
+        lychee.game.Sprite.call(this, _.merge({
+            animation: {
+                frame: 0,
+                frames: 4,
+                duration: 240,
+                loop: true
+            },
+            shape: lychee.game.Entity.SHAPE.rectangle,
+            collission: lychee.game.Entity.COLLISION.A,
+            state: 'right'
 
-        lychee.game.Sprite.call(this, settings);
+        }, game.config.player));
 
-        this.__shape = lychee.game.Entity.SHAPE.rectangle;
 
-        this.__collision = lychee.game.Entity.COLLISION.A;
+        var playerConfig = game.config.player;
 
-        this.__state = 'right';
+        this.__world = owner;
 
         this.__speed = {
             x: 0,
             y: 0
-        };
-
-        this.__animation = {
-            frame: 0,
-            frames: 4,
-            duration: 240,
-            loop: true
         };
 
 
@@ -42,6 +43,9 @@ lychee.define('game.entity.Player').requires([
 
 
         update: function(clock, delta) {
+
+            lychee.ui.Sprite.prototype.update.call(this, clock, delta);
+
             // Is falling or has jumped?
             if (this.__isFalling) {
                 this.__fall();
@@ -85,7 +89,7 @@ lychee.define('game.entity.Player').requires([
 
 
         goLeft: function() {
-            if (this.__speed.x < -0.2) return;
+            if (this.__speed.x < -0.5) return;
 
             this.__speed.x -= 0.05;
 
@@ -95,7 +99,7 @@ lychee.define('game.entity.Player').requires([
         },
 
         goRight: function() {
-            if (this.__speed.x > 0.2) return;
+            if (this.__speed.x > 0.5) return;
 
             this.__speed.x += 0.05;
 
@@ -121,11 +125,12 @@ lychee.define('game.entity.Player').requires([
         },
 
         shoot: function() {
+            var direction = this.__state === 'left' ? -1 : 1;
             console.log('SHOOTING');
             if (this.game.settings.sound) {
                 this.game.jukebox.play('fork', 0.5);
             }
-            this.__owner.shootFork(this.getPosition(), this.__speed);
+            this.__world.shootFork(this.getPosition(), direction);
 
 
         }

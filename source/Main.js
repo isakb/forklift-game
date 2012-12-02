@@ -5,6 +5,7 @@ lychee.define('game.Main').requires([
     'lychee.Input',
     'game.Jukebox',
     'game.Renderer',
+    'game.Tileset',
     'game.state.Game',
     'game.state.Menu',
     'game.DeviceSpecificHacks'
@@ -48,6 +49,7 @@ lychee.define('game.Main').requires([
                 headlineFont    : base + '/img/font_48_white.png',
                 normalFont      : base + '/img/font_32_white.png',
                 smallFont       : base + '/img/font_16_white.png',
+                metatilesImage  : base + '/img/metatiles.png',
                 spriteImage     : base + '/img/sprite.png',
                 spriteJson      : base + '/json/sprite.json',
                 forkImage       : base + '/img/fork.png',
@@ -104,9 +106,22 @@ lychee.define('game.Main').requires([
                 this.config.sprite.image = assets[urls.spriteImage];
                 this.config.player.image = assets[urls.playerImage];
                 this.config.fork.image = assets[urls.forkImage];
+                this.config.tilesets = {};
 
                 _.each(urls.levels, function(val, name) {
-                    this.config.levels[name] = assets[urls.levels[name].json];
+                    var json = assets[urls.levels[name].json],
+                        tilesets = {};
+
+                    this.config.levels[name] = json;
+                    _.each(json.tilesets, function(tileset) {
+                        tileset.image = tileset.image.replace(/^\.\./, './asset');
+                        // if (tileset.name === 'metatiles') {
+                        //     tileset.isMeta = true;
+                        //     delete tileset.image;
+                        // }
+                        this.config.tilesets[tileset.name] = new game.Tileset(tileset, assets);
+                    }, this);
+
                 }, this);
 
                 this.init();

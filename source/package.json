@@ -17,6 +17,7 @@
 
 		"DeviceSpecificHacks": [ "js" ],
 		"Jukebox": [ "js" ],
+		"Tileset": [ "js" ],
 		"Layer": [ "js" ],
 		"Main": [ "js", "css" ],
 		"Renderer": [ "js" ],

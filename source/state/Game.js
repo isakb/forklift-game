@@ -21,6 +21,7 @@ lychee.define('game.state.Game').requires([
         this.__clock = 0;
         this.__skyboxEntity = null;
         this.__backgroundEntity = null;
+        this.__layers = [];
         this.__entities = {};
         this.__player = null;
         this.__forks = [];
@@ -37,13 +38,6 @@ lychee.define('game.state.Game').requires([
         reset: function() {
 
             this.__level = '01';
-
-            var width = this.game.settings.width;
-            var height = this.game.settings.height;
-
-            var image = this.game.config.sprite.image;
-            var states = this.game.config.sprite.states;
-            var map = this.game.config.sprite.map;
 
         },
 
@@ -97,6 +91,11 @@ lychee.define('game.state.Game').requires([
                 this.__entities[e].update(clock, delta);
             }
 
+            for (var f in this.__forks) {
+                if (this.__forks[f] === null) continue;
+                this.__forks[f].update(clock, delta);
+            }
+
             this.__clock = clock;
 
         },
@@ -116,6 +115,10 @@ lychee.define('game.state.Game').requires([
 
             for (var layer in this.__layers) {
                 this.__renderer.renderLayer(this.__layers[layer]);
+            }
+
+            for (var fork in this.__forks) {
+                this.__renderer.renderEntity(this.__forks[fork]);
             }
 
             this.__renderer.renderPlayer(this.__player);
@@ -145,6 +148,7 @@ lychee.define('game.state.Game').requires([
 
             var assets = this.game.assets;
 
+
             var LEVEL_IMG_PREFIX = './asset/img/l';
 
             var width = this.game.settings.width;
@@ -164,11 +168,7 @@ lychee.define('game.state.Game').requires([
 
             this.__exit = new game.entity.Exit();
 
-            this.__player = new game.entity.Player({
-                image: this.game.config.player.image,
-                state: this.game.config.player.states,
-                map: this.game.config.player.map
-            }, this.game, this);
+            this.__player = new game.entity.Player(this.game, this);
 
             var tileWidth = levelConfig.tilewidth;
             var tileHeight = levelConfig.tileheight;
@@ -229,6 +229,8 @@ lychee.define('game.state.Game').requires([
                 case 'tilelayer':
                     if (layer.name === 'collision') {
                         this.__collisionLayer = layer.data;
+                    } else {
+                        this.__layers.push(layer);
                     }
                     break;
 
@@ -269,12 +271,12 @@ lychee.define('game.state.Game').requires([
             }, this);
         },
 
-        shootFork: function(position, addSpeed) {
+        shootFork: function(position, direction) {
             this.__forks.push(new game.entity.Fork({
                 x: position.x,
                 y: position.y,
-                dx: addSpeed.x * 4,
-                dy: addSpeed.y
+                dx: direction > 0 ? 0.5 : -0.5,
+                dy: -0.3
             }, this.game));
         },
 
