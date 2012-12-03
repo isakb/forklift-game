@@ -22,9 +22,10 @@ lychee.define('game.state.Game').requires([
         this.__skyboxEntity = null;
         this.__backgroundEntity = null;
         this.__layers = [];
-        this.__entities = {};
+        this.__guiEntities = {};
         this.__player = null;
         this.__forks = [];
+        this.__enemies = [];
         this.__exit = null;
         this.__locked = false;
 
@@ -77,6 +78,8 @@ lychee.define('game.state.Game').requires([
 
             this.__input.unbind('space', this.__onKeySpace);
 
+            this.__tileCache = undefined;
+
             lychee.game.State.prototype.leave.call(this);
 
         },
@@ -86,9 +89,9 @@ lychee.define('game.state.Game').requires([
 
             this.__player.update(clock, delta);
 
-            for (var e in this.__entities) {
-                if (this.__entities[e] === null) continue;
-                this.__entities[e].update(clock, delta);
+            for (var e in this.__guiEntities) {
+                if (this.__guiEntities[e] === null) continue;
+                this.__guiEntities[e].update(clock, delta);
             }
 
             for (var f in this.__forks) {
@@ -102,7 +105,7 @@ lychee.define('game.state.Game').requires([
 
         render: function(clock, delta) {
 
-            var entity;
+            var entity, i, layer;
 
             this.__renderer.clear();
 
@@ -112,26 +115,44 @@ lychee.define('game.state.Game').requires([
 
             this.__renderer.renderParallaxBackground(this.__backgroundEntity, this.__player);
 
+            for (i in this.__layers) {
+                layer = this.__layers[i];
 
-            for (var layer in this.__layers) {
-                this.__renderer.renderLayer(this.__layers[layer]);
+                if (layer === 'entities') {
+                    // Render all entities, player, forks etc. before continuing
+                    // with foreground layer(s).
+                    for (var fork in this.__forks) {
+                        this.__renderer.renderEntity(this.__forks[fork]);
+                    }
+                    this.__renderer.renderPlayer(this.__player);
+
+                } else {
+                    this.__renderer.renderLayer(
+                        layer,
+                        this.game.config.tilesets,
+                        this.__tileWidth,
+                        this.__tileHeight
+                    );
+                }
             }
 
-            for (var fork in this.__forks) {
-                this.__renderer.renderEntity(this.__forks[fork]);
-            }
+            // TODO: only do this for debug
+            this.__renderer.renderLayer(
+                this.__collisionLayer,
+                this.game.config.tilesets,
+                this.__tileWidth,
+                this.__tileHeight
+            );
 
-            this.__renderer.renderPlayer(this.__player);
-
-            for (var e in this.__entities) {
-                entity = this.__entities[e];
+            for (var e in this.__guiEntities) {
+                entity = this.__guiEntities[e];
 
                 if (entity === null) {
                     continue;
                 } else if (entity.type) {
                     this.__renderer['render' + entity.type](entity);
                 } else {
-                    this.__renderer.renderUIEntity(this.__entities[e]);
+                    this.__renderer.renderUIEntity(this.__guiEntities[e]);
                 }
             }
 
@@ -170,10 +191,12 @@ lychee.define('game.state.Game').requires([
 
             this.__player = new game.entity.Player(this.game, this);
 
-            var tileWidth = levelConfig.tilewidth;
-            var tileHeight = levelConfig.tileheight;
+            this.__tileWidth = levelConfig.tilewidth;
+            this.__tileHeight = levelConfig.tileheight;
             var tileSets = levelConfig.tilesets;
             var layers = levelConfig.layers;
+
+            this.__tileCache = {};
 
             _.each(layers, function(layer) {
                 this.__makeLayer(layer);
@@ -181,7 +204,7 @@ lychee.define('game.state.Game').requires([
 
             this.__locked = false;
 
-            this.__entities.title = new lychee.ui.Text({
+            this.__guiEntities.title = new lychee.ui.Text({
                 text: levelConfig.properties.title,
                 font: this.game.fonts.normal,
                 position: {
@@ -190,7 +213,7 @@ lychee.define('game.state.Game').requires([
                 }
             });
 
-            this.__entities.description = new lychee.ui.Text({
+            this.__guiEntities.description = new lychee.ui.Text({
                 text: levelConfig.properties.description,
                 font: this.game.fonts.small,
                 position: {
@@ -199,23 +222,23 @@ lychee.define('game.state.Game').requires([
                 }
             });
 
-            this.__entities.title.setTween(1500, {
+            this.__guiEntities.title.setTween(1500, {
                 y: height / 2 - 100
             }, lychee.game.Entity.TWEEN.easeOut);
 
             this.__loop.timeout(1000, function() {
-                this.__entities.description.setTween(500, {
+                this.__guiEntities.description.setTween(500, {
                     y: height / 2 + 100
                 }, lychee.game.Entity.TWEEN.easeOut);
 
             }, this);
 
             this.__loop.timeout(3000, function() {
-                this.__entities.title.setTween(500, {
+                this.__guiEntities.title.setTween(500, {
                     x: -1000
                 }, lychee.game.Entity.TWEEN.easeIn);
 
-                this.__entities.description.setTween(500, {
+                this.__guiEntities.description.setTween(500, {
                     x: -1000
                 }, lychee.game.Entity.TWEEN.easeIn);
 
@@ -228,7 +251,7 @@ lychee.define('game.state.Game').requires([
             switch(layer.type) {
                 case 'tilelayer':
                     if (layer.name === 'collision') {
-                        this.__collisionLayer = layer.data;
+                        this.__collisionLayer = layer;
                     } else {
                         this.__layers.push(layer);
                     }
@@ -239,6 +262,9 @@ lychee.define('game.state.Game').requires([
                         this.__addEnemies(layer.objects);
                     } else if (layer.name === 'entities') {
                         this.__addEntities(layer.objects);
+
+                        // Placeholder for rendering order:
+                        this.__layers.push('entities');
                     }
                     break;
 
@@ -266,7 +292,7 @@ lychee.define('game.state.Game').requires([
         __addEnemies: function(entities) {
             _.each(entities, function(entity) {
                 var Klass = game.entity[entity.type];
-                this.__entities[entity.name] = new Klass(entity.properties);
+                this.__enemies[entity.name] = new Klass(entity.properties);
 
             }, this);
         },

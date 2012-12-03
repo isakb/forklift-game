@@ -13,6 +13,7 @@ lychee.define('game.Renderer').includes([
     Class.prototype = {
 
         moveCameraTo: function(entity) {
+
             var offset = entity.getPosition();
 
             this.camX = offset.x;
@@ -22,7 +23,9 @@ lychee.define('game.Renderer').includes([
             this.centerY = this.__height / 2;
         },
 
+
         renderPlayer: function(entity) {
+
             var map = entity.getMap(),
                 image = entity.getImage();
 
@@ -37,29 +40,58 @@ lychee.define('game.Renderer').includes([
 
         },
 
-        renderLayer: function(layer) {
 
-            debugger
+        renderLayer: function(layer, tileset, mapTileWidth, mapTileHeight) {
 
-            var i, j, tile, posX, posY,
+            var i, j, count, tile, posX, posY, tileWidth, tileHeight,
                 data = layer.data,
                 W = layer.width;
-                H = layer.height,
-                tileWidth = 16,
-                tileHeight = 16,
-                timeImage = null
-                tileMap = null;
+                H = layer.height;
 
+            if (layer.name === 'collision') {
+                // Rendering the collision layer.
+                color = '#f00';
+                fill = false;
+                // TODO: Get from tileset
+                tileWidth = 32;
+                tileHeight = 32;
+            } else {
+                color = '#888';
+                fill = true;
+                // TODO: Get from tileset
+                tileWidth = 16;
+                tileHeight = 16;
+            }
+
+            var scaling = 1.5;
+            mapTileWidth *= scaling;
+            mapTileHeight *= scaling;
+            tileWidth *= scaling;
+            tileHeight *= scaling;
+
+            count = 0;
             for (i = 0; i < H; i++) {
                 for (j = 0; j < W; j++) {
-                    tile = data[i * H + j];
+                    tile = data[count++];
 
                     if (tile) {
-                        this.drawSprite()
-                        // // Render the sprite
+                        posX = j * mapTileWidth - mapTileWidth / 2;
+                        posY = i * mapTileHeight - mapTileHeight / 2;
+
+                        // TODO: Use actual tile graphics
+                        // NB: (z|0) is used to "convert z to integer", in order
+                        // to avoid float artifacts such as gaps between tiles.
+                        this.drawBox(
+                            (this.centerX - this.camX + posX - tileWidth / 2) | 0,
+                            (this.centerY - this.camY + posY - tileHeight / 2) | 0,
+                            (this.centerX - this.camX + posX + tileWidth / 2) | 0,
+                            (this.centerY - this.camY + posY + tileHeight / 2 ) | 0,
+                            color,
+                            fill
+                        )
                         // this.drawSprite(
-                        //     centerX + posX - tileWidth / 2,
-                        //     centerY + posY - tileHeight / 2,
+                        //     x,
+                        //     y,
                         //     tileImage,
                         //     tileMap
                         // );
@@ -68,7 +100,9 @@ lychee.define('game.Renderer').includes([
             }
         },
 
+
         renderEntity: function(entity) {
+
             var map = entity.getMap();
             var image = entity.getImage();
 

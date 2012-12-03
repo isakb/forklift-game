@@ -24,7 +24,7 @@
  </imagelayer>
  <layer name="background" width="80" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt2TkKgDAURdG/gKjZl2PvuP9V+GqJGEJQ0XvgNq/8BBudmRWqVJXyygU2hIVuddy457mYt8f9roVu5I17xXDGGwMAAAAAAOlq1ahWdapXQ8L+V6Oa1KwWtaotYQeelOs78Lb9Lrm+A2/bAXwD/5AAALF2So0zOg==
+   eJztlkkKwkAQRXvvuHLjLGrUCzhcwRG3jngUb6A30JP6gwFtIS1laSDxP3ibIgTS/K4fzxjTgV3YM3c8xSzuHOEYTuAUzuAcLkLmfTiAQzgK3qGZxZ0zXME13MAt3MF9yJzYXI0sf8SG+dMhzV8SO0CD3x+S/CWxAzT495f773P8+8v99znS/z9iw/7Vwf8/HdL+JTbsXx3sXx2u/m3AQmA7eI7YuPq3bh7n1wqeIzau/n09v3f5k+5S1/z0pe/7Na7+leZPuktd88sXvi0KXJmR5u8fcWXm+fyaJrr9t4QpmIYZmIU5mE/APAoOsAhLsAwrsAprCZgTQgghhJD/4gbN1m8w
   </data>
  </layer>
  <objectgroup name="entities" width="80" height="30">
@@ -48,7 +48,7 @@
  </objectgroup>
  <layer name="foreground" width="80" height="30">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAB4DCWAAAE=
+   eJzt2EENgFAMRMHviYAB5IADcACiWRWUkpnknbvnjgF0tqW9ekRjRzqrRzR2pbt6BAAAAMCH/OVfN6clrWl68a5/HQAA0NEDouMFlQ==
   </data>
  </layer>
  <layer name="collision" width="80" height="30" opacity="0.68">
