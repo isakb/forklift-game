@@ -24,6 +24,27 @@ lychee.define('game.Renderer').includes([
         },
 
 
+
+        renderDebugBox: function(entity, color, fill) {
+
+            var pos = entity.getPosition(),
+                posX = pos.x,
+                posY = pos.y;
+
+            color = color || '#fff';
+
+            this.drawBox(
+                (this.centerX - this.camX + posX) | 0,
+                (this.centerY - this.camY + posY - 16) | 0,
+                (this.centerX - this.camX + posX + entity.width) | 0,
+                (this.centerY - this.camY + posY + entity.height - 16) | 0,
+                color,
+                fill,
+                1
+            );
+
+        },
+
         renderEntity: function(entity) {
 
             var pos = entity.getPosition(),
@@ -31,8 +52,8 @@ lychee.define('game.Renderer').includes([
                 posY = pos.y;
 
             this.drawSprite(
-                (this.centerX - this.camX + posX - entity.width / 2) | 0,
-                (this.centerY - this.camY + posY - entity.height / 2) | 0,
+                (this.centerX - this.camX + posX) | 0,
+                (this.centerY - this.camY + posY - 16) | 0,
                 entity.getImage(),
                 entity.getMap()
             );
@@ -63,25 +84,24 @@ lychee.define('game.Renderer').includes([
             }
 
             count = 0;
+            posY = 0; //mapTileWidth / 2;
             for (i = 0; i < H; i++) {
+                posX = 0; //mapTileWidth / 2;
                 for (j = 0; j < W; j++) {
                     tile = data[count++];
 
                     if (tile) {
-                        posX = j * mapTileWidth - mapTileWidth / 2;
-                        posY = i * mapTileHeight - mapTileHeight / 2;
-
                         // TODO: Use actual tile graphics
                         // NB: (z|0) is used to "convert z to integer", in order
                         // to avoid float artifacts such as gaps between tiles.
                         this.drawBox(
-                            (this.centerX - this.camX + posX - tileWidth / 2) | 0,
-                            (this.centerY - this.camY + posY - tileHeight / 2) | 0,
-                            (this.centerX - this.camX + posX + tileWidth / 2) | 0,
-                            (this.centerY - this.camY + posY + tileHeight / 2 ) | 0,
+                            (this.centerX - this.camX + posX) | 0,
+                            (this.centerY - this.camY + posY - tileHeight) | 0,
+                            (this.centerX - this.camX + posX + tileWidth) | 0,
+                            (this.centerY - this.camY + posY) | 0,
                             color,
                             fill
-                        )
+                        );
                         // this.drawSprite(
                         //     x,
                         //     y,
@@ -89,7 +109,10 @@ lychee.define('game.Renderer').includes([
                         //     tileMap
                         // );
                     }
+
+                    posX += mapTileWidth;
                 }
+                posY += mapTileHeight;
             }
         },
 

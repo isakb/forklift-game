@@ -24,6 +24,7 @@ lychee.define('game.state.Game').requires([
         this.__layers = [];
         this.__guiEntities = {};
         this.__player = null;
+        this.__playerStart = null;
         this.__forks = [];
         this.__enemies = [];
         this.__exit = null;
@@ -122,6 +123,9 @@ lychee.define('game.state.Game').requires([
                         this.__renderer.renderEntity(this.__forks[fork]);
                     }
                     this.__renderer.renderEntity(this.__player);
+
+                    this.__renderer.renderDebugBox(this.__playerStart, '#0f0');
+                    this.__renderer.renderDebugBox(this.__exit, '#00f');
 
                 } else {
                     this.__renderer.renderLayer(
@@ -276,9 +280,24 @@ lychee.define('game.state.Game').requires([
             _.each(entities, function(entity) {
                 if (entity.type === 'Player') {
                     this.__player.setPosition({x: entity.x, y: entity.y});
+                    this.__player.width = entity.width;
+                    this.__player.height = entity.height;
+
+                    this.__playerStart = new lychee.game.Sprite({
+                        position: {
+                            x: entity.x,
+                            y: entity.y
+                        },
+                        width: entity.width,
+                        height: entity.height
+                    });
+
                 } else if (entity.type === 'Exit') {
                     // Let's limit it to one exit per level for now.
                     this.__exit.setPosition({x: entity.x, y: entity.y});
+                    this.__exit.width = entity.width;
+                    this.__exit.height = entity.height;
+                    this.__exit.nextLevel = entity.properties.next;
                 } else {
                     console.warn('Ignored map entity: ' + entity.type);
                 }

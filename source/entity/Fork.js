@@ -46,7 +46,7 @@ lychee.define('game.entity.Fork').requires([
         },
 
         __fly: function() {
-            this.__speed.x *= 50 / (50 + this.__speed.x * this.__speed.x); // use the fork, luke
+            this.__speed.x *= 50 / (50 + this.__speed.x * this.__speed.x);
             this.__speed.y = (this.__speed.y + 0.02) * 0.99;
         },
 
