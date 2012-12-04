@@ -24,18 +24,17 @@ lychee.define('game.Renderer').includes([
         },
 
 
-        renderPlayer: function(entity) {
+        renderEntity: function(entity) {
 
-            var map = entity.getMap(),
-                image = entity.getImage();
-
-            // Player is always centered.
+            var pos = entity.getPosition(),
+                posX = pos.x,
+                posY = pos.y;
 
             this.drawSprite(
-                this.centerX - entity.width / 2,
-                this.centerY - entity.height / 2,
-                image,
-                map
+                (this.centerX - this.camX + posX - entity.width / 2) | 0,
+                (this.centerY - this.camY + posY - entity.height / 2) | 0,
+                entity.getImage(),
+                entity.getMap()
             );
 
         },
@@ -62,12 +61,6 @@ lychee.define('game.Renderer').includes([
                 tileWidth = 16;
                 tileHeight = 16;
             }
-
-            var scaling = 1.5;
-            mapTileWidth *= scaling;
-            mapTileHeight *= scaling;
-            tileWidth *= scaling;
-            tileHeight *= scaling;
 
             count = 0;
             for (i = 0; i < H; i++) {
@@ -101,27 +94,6 @@ lychee.define('game.Renderer').includes([
         },
 
 
-        renderEntity: function(entity) {
-
-            var map = entity.getMap();
-            var image = entity.getImage();
-
-            var pos = entity.getPosition();
-            var posX = pos.x;
-            var posY = pos.y;
-
-            var centerX = this.__width / 2;
-            var centerY = this.__height / 2;
-
-            this.drawSprite(
-                centerX + posX - entity.width / 2,
-                centerY + posY - entity.height / 2,
-                image,
-                map
-            );
-        },
-
-
         renderParallaxBackground: function(bgEntity, playerEntity) {
 
             var playerPosition = playerEntity.getPosition();
@@ -130,7 +102,7 @@ lychee.define('game.Renderer').includes([
             var height = bgEntity.__image.naturalHeight;
 
             var posX = 0 - this.camX * bgEntity.parallax;
-            var posY = 0 - this.camY * bgEntity.parallax / 5;
+            var posY = 0 - this.camY * bgEntity.parallax / 3;
 
             for(var i = -5; i < 6; i++) {
                 for (var j = -2; j < 3; j++) {

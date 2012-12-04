@@ -16,11 +16,11 @@ lychee.define('game.entity.Player').requires([
             animation: {
                 frame: 0,
                 frames: 4,
-                duration: 240,
+                duration: 280,
                 loop: true
             },
             shape: lychee.game.Entity.SHAPE.rectangle,
-            collission: lychee.game.Entity.COLLISION.A,
+            collision: lychee.game.Entity.COLLISION.A,
             state: 'right'
 
         }, game.config.player));
@@ -51,24 +51,26 @@ lychee.define('game.entity.Player').requires([
                 this.__fall();
             }
 
-            var newPosition = {
-                x: this.__position.x + this.__speed.x * delta,
-                y: this.__position.y + this.__speed.y * delta,
-                z: this.__position.z
-            };
+            var pos = this.__position;
 
             // TODO: check if new position is valid or collides
+            //
+            pos.x = this.__position.x + this.__speed.x * delta;
+            pos.y = this.__position.y + this.__speed.y * delta;
 
-            this.__position = newPosition;
+            // The world is "infinite" but repeating in y-axis.
+            if (this.__position.y > 15000) {
+                console.log('warping');
+                this.__position.y = -15000 + (this.__position.y - 15000);
+            } else if (this.__position.y < -15000) {
+                console.log('warping');
+                this.__position.y = 15000 - (this.__position.y + 15000);
+            }
+
         },
 
         __fall: function() {
-            var newSpeed = {
-                x: this.__speed.x,
-                // gravity
-                y: this.__speed.y + 0.01
-            };
-            this.__speed = newSpeed;
+            this.__speed.y = (this.__speed.y + 0.015) * 0.99;
         },
 
         __checkIfCollidesWithGroundEntity: function(groundEntity) {
@@ -125,13 +127,22 @@ lychee.define('game.entity.Player').requires([
         },
 
         shoot: function() {
-            var direction = this.__state === 'left' ? -1 : 1;
+            var direction = this.__state === 'left' ? -1 : 1,
+                position = this.getPosition();
+
             console.log('SHOOTING');
+
             if (this.game.settings.sound) {
                 this.game.jukebox.play('fork', 0.5);
             }
-            this.__world.shootFork(this.getPosition(), direction);
 
+            this.__world.spawnFork({
+                x: position.x,
+                y: position.y
+            }, {
+                x: this.__speed.x,
+                y: this.__speed.y
+            }, this.__state);
 
         }
 

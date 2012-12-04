@@ -20,15 +20,12 @@ lychee.define('game.entity.Fork').requires([
                 loop: true
             },
             shape: lychee.game.Entity.SHAPE.circle,
-            collission: lychee.game.Entity.COLLISION.A,
-            state: settings.dx > 0 ? 'right' : 'left'
+            collision: lychee.game.Entity.COLLISION.A,
+            state: settings.direction
 
         }, game.config.fork, settings));
 
-        this.__speed = {
-            x: settings.dx,
-            y: settings.dy
-        };
+        this.__speed = settings.speed;
 
         this.__fly();
 
@@ -49,7 +46,7 @@ lychee.define('game.entity.Fork').requires([
         },
 
         __fly: function() {
-            this.__speed.x *= 1.02; // use the fork, luke
+            this.__speed.x *= 50 / (50 + this.__speed.x * this.__speed.x); // use the fork, luke
             this.__speed.y = (this.__speed.y + 0.02) * 0.99;
         },
 

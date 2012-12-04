@@ -50,9 +50,6 @@ lychee.define('game.state.Game').requires([
 
             this.__enterLevel(this.__level);
 
-            var width = this.game.settings.width;
-            var height = this.game.settings.height;
-
             if (this.game.settings.music) {
                 this.game.jukebox.play('music', true, 0.7);
             }
@@ -124,7 +121,7 @@ lychee.define('game.state.Game').requires([
                     for (var fork in this.__forks) {
                         this.__renderer.renderEntity(this.__forks[fork]);
                     }
-                    this.__renderer.renderPlayer(this.__player);
+                    this.__renderer.renderEntity(this.__player);
 
                 } else {
                     this.__renderer.renderLayer(
@@ -297,12 +294,14 @@ lychee.define('game.state.Game').requires([
             }, this);
         },
 
-        shootFork: function(position, direction) {
+        spawnFork: function(position, speed, direction) {
             this.__forks.push(new game.entity.Fork({
-                x: position.x,
-                y: position.y,
-                dx: direction > 0 ? 0.5 : -0.5,
-                dy: -0.3
+                direction: direction,
+                position: position,
+                speed: {
+                    x: speed.x + 0.5 * (direction === 'right' ? 1 : -1),
+                    y: speed.y -0.3
+                }
             }, this.game));
         },
 

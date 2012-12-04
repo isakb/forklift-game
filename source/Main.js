@@ -18,7 +18,6 @@ lychee.define('game.Main').requires([
         lychee.game.Main.call(this, settings);
 
         this.fonts = {};
-        this.sprite = null;
 
         this.__offset = { x: 0, y: 0 };
 
@@ -50,8 +49,6 @@ lychee.define('game.Main').requires([
                 normalFont      : base + '/img/font_32_white.png',
                 smallFont       : base + '/img/font_16_white.png',
                 metatilesImage  : base + '/img/metatiles.png',
-                spriteImage     : base + '/img/sprite.png',
-                spriteJson      : base + '/json/sprite.json',
                 forkImage       : base + '/img/fork.png',
                 forkJson        : base + '/json/fork-sprites.json',
                 playerImage     : base + '/img/player-sprites.png',
@@ -97,13 +94,11 @@ lychee.define('game.Main').requires([
 
 
                 this.config = {
-                    sprite: assets[urls.spriteJson],
                     player: assets[urls.playerJson],
                     fork: assets[urls.forkJson],
                     levels: {}
                 };
 
-                this.config.sprite.image = assets[urls.spriteImage];
                 this.config.player.image = assets[urls.playerImage];
                 this.config.fork.image = assets[urls.forkImage];
                 this.config.tilesets = {};
