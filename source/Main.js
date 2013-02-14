@@ -3,6 +3,7 @@
 lychee.define('game.Main').requires([
     'lychee.Font',
     'lychee.Input',
+    'lychee.Viewport',
     'game.Jukebox',
     'game.Renderer',
     'game.Tileset',
@@ -150,6 +151,11 @@ lychee.define('game.Main').requires([
 
             var env = this.renderer.getEnvironment();
 
+            if (typeof width === 'number' && typeof height === 'number') {
+                env.screen.width  = width;
+                env.screen.height = height;
+            }
+
             if (this.settings.fullscreen) {
                 this.settings.width = env.screen.width;
                 this.settings.height = env.screen.height;
@@ -178,13 +184,56 @@ lychee.define('game.Main').requires([
 
             this.renderer.setBackground("#ffffff");
 
+            this.viewport = new lychee.Viewport();
+            this.viewport.bind('reshape', function(orientation, rotation, width, height) {
+
+                this.reset(width, height);
+
+                for (var id in this.states) {
+                    this.states[id].reset();
+                }
+
+                var state = this.getState();
+
+                if (state.leave) {
+                    state.leave();
+                }
+                if (state.enter) {
+                    state.enter();
+                }
+            }, this);
+
+            this.viewport.bind('hide', function() {
+
+                if (this.jukebox && this.jukebox.isPlaying('music')) {
+                    this.jukebox.stop('music');
+                }
+
+                this.stop();
+
+            }, this);
+
+            this.viewport.bind('show', function() {
+
+                if (this.jukebox && this.jukebox.isPlaying('music')) {
+                    this.jukebox.play('music');
+                }
+
+                this.start();
+
+            }, this);
+
+
             this.reset();
 
             this.jukebox = new game.Jukebox(this);
 
             this.input = new lychee.Input({
-                delay: 0,
-                fireModifiers: true
+                delay:        0,
+                fireModifier: false,
+                fireKey:      true,
+                fireTouch:    true,
+                fireSwipe:    false
             });
 
 

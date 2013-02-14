@@ -11,6 +11,7 @@ lychee.define('game.state.Menu').requires([
         lychee.game.State.call(this, game, 'menu');
 
         this.__input = this.game.input;
+
         this.__renderer = this.game.renderer;
 
         this.__locked = true;
@@ -239,10 +240,9 @@ lychee.define('game.state.Menu').requires([
 
         },
 
-        __processTouch: function(position, delta) {
+        __processTouch: function(id, position, delta) {
 
             if (this.__locked) return;
-
 
             var gameOffset = this.game.getOffset();
 

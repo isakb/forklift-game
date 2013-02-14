@@ -22,7 +22,7 @@ lychee.rebase({
 		platform: platform
 	});
 
-})(this.lychee, this);
+})(lychee, typeof global !== 'undefined' ? global : this);
 
 
 lychee.build(function(lychee, global) {
@@ -35,5 +35,4 @@ lychee.build(function(lychee, global) {
 
 	new game.Main(settings);
 
-}, this);
-
+}, typeof global !== 'undefined' ? global : this);
