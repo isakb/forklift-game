@@ -29,26 +29,26 @@ lychee.define('game.Tileset').requires([
             throw new Error('Tile image with spacing is not supported');
         }
 
-        this.__name = json.name;
+        this._name = json.name;
 
         // The first global tile ID of this tileset (this global ID maps to the
         // first tile in this tileset).
-        this.__firstGID = json.firstgid;
+        this._firstGID = json.firstgid;
 
         // The (maximum) width of the tiles in this tileset.
-        this.__tileWidth = json.tilewidth;
+        this._tileWidth = json.tilewidth;
 
         // The (maximum) height of the tiles in this tileset.
-        this.__tileHeight = json.tileheight;
+        this._tileHeight = json.tileheight;
 
-        this.__image = this.__validatedImage(assets[json.image], json);
+        this._image = this._validatedImage(assets[json.image], json);
 
-        this.__createStatesAndMap();
+        this._createStatesAndMap();
 
         lychee.game.Sprite.call(this, {
-            image: this.__image,
-            states: this.__states,
-            map: this.__map
+            image: this._image,
+            states: this._states,
+            map: this._map
         });
 
     };
@@ -57,11 +57,11 @@ lychee.define('game.Tileset').requires([
     Class.prototype = {
 
         hasGID: function(gid) {
-            return this.__firstGID <= gid && gid <= this.__lastGID;
+            return this._firstGID <= gid && gid <= this._lastGID;
         },
 
 
-        __validatedImage: function(image, json) {
+        _validatedImage: function(image, json) {
             if (json.imagewidth !== image.naturalWidth ||
                 json.imageheight !== image.naturalHeight) {
 
@@ -72,13 +72,13 @@ lychee.define('game.Tileset').requires([
         },
 
 
-        __createStatesAndMap: function() {
+        _createStatesAndMap: function() {
             var i, j, count,
-                W = this.__tileWidth,
-                H = this.__tileHeight,
+                W = this._tileWidth,
+                H = this._tileHeight,
                 map = {},
                 states = {},
-                img = this.__image;
+                img = this._image;
 
             count = 0;
 
@@ -86,18 +86,18 @@ lychee.define('game.Tileset').requires([
                 for (j = 0; j < img.naturalHeight; j += W) {
                     count += 1;
 
-                    states[this.__firstGID + count] = count;
-                    map[this.__firstGID + count] = {
+                    states[this._firstGID + count] = count;
+                    map[this._firstGID + count] = {
                         width: W,
                         height: H
                     };
                 }
             }
 
-            this.__numTiles = count;
-            this.__lastGID = this.__firstGID + count;
-            this.__states = states;
-            this.__map = map;
+            this._numTiles = count;
+            this._lastGID = this._firstGID + count;
+            this._states = states;
+            this._map = map;
 
         }
 

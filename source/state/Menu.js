@@ -10,15 +10,15 @@ lychee.define('game.state.Menu').requires([
 
         lychee.game.State.call(this, game, 'menu');
 
-        this.__input = this.game.input;
+        this._input = this.game.input;
 
-        this.__renderer = this.game.renderer;
+        this._renderer = this.game.renderer;
 
-        this.__locked = true;
-        this.__scene = null;
+        this._locked = true;
+        this._scene = null;
 
-        this.__welcome = null;
-        this.__settings = null;
+        this._welcome = null;
+        this._settings = null;
 
 
         this.reset();
@@ -35,10 +35,10 @@ lychee.define('game.state.Menu').requires([
             var entity = null;
 
 
-            this.__scene = new game.Scene(this.game);
+            this._scene = new game.Scene(this.game);
 
 
-            this.__welcome = this.__scene.add(new lychee.ui.Tile({
+            this._welcome = this._scene.add(new lychee.ui.Tile({
                 width: this.game.settings.width,
                 height: this.game.settings.height,
                 position: {
@@ -47,7 +47,7 @@ lychee.define('game.state.Menu').requires([
                 }
             }), null);
 
-            this.__scene.add(new lychee.ui.Text({
+            this._scene.add(new lychee.ui.Text({
                 text: this.game.settings.title,
                 font: this.game.fonts.headline,
                 layout: {
@@ -55,9 +55,9 @@ lychee.define('game.state.Menu').requires([
                     x: 0,
                     y: -hheight + 80
                 }
-            }), this.__welcome);
+            }), this._welcome);
 
-            this.__scene.add(new lychee.ui.Text({
+            this._scene.add(new lychee.ui.Text({
                 text: 'powered by lycheeJS',
                 font: this.game.fonts.small,
                 layout: {
@@ -65,7 +65,7 @@ lychee.define('game.state.Menu').requires([
                     x: 0,
                     y: hheight - 30
                 }
-            }), this.__welcome);
+            }), this._welcome);
 
             entity = new lychee.ui.Text({
                 text: 'Start Game',
@@ -81,7 +81,7 @@ lychee.define('game.state.Menu').requires([
                 this.game.setState('game');
             }, this);
 
-            this.__scene.add(entity, this.__welcome);
+            this._scene.add(entity, this._welcome);
 
             entity = new lychee.ui.Text({
                 text: 'Settings',
@@ -94,16 +94,16 @@ lychee.define('game.state.Menu').requires([
             });
 
             entity.bind('touch', function(entity) {
-                this.__scene.scrollTo(this.__settings);
+                this._scene.scrollTo(this._settings);
             }, this);
 
-            this.__scene.add(entity, this.__welcome);
+            this._scene.add(entity, this._welcome);
 
 
 
 
 
-            this.__settings = this.__scene.add(new lychee.ui.Tile({
+            this._settings = this._scene.add(new lychee.ui.Tile({
                 width: this.game.settings.width,
                 height: this.game.settings.height,
                 position: {
@@ -123,10 +123,10 @@ lychee.define('game.state.Menu').requires([
             });
 
             entity.bind('touch', function(entity) {
-                this.__scene.scrollTo(this.__welcome);
+                this._scene.scrollTo(this._welcome);
             }, this);
 
-            this.__scene.add(entity, this.__settings);
+            this._scene.add(entity, this._settings);
 
             // entity = new lychee.ui.Text({
             //     text: 'Fullscreen: ' + (this.game.settings.fullscreen ? 'On' : 'Off'),
@@ -147,11 +147,11 @@ lychee.define('game.state.Menu').requires([
             //     this.game.reset();
             //     this.reset();
 
-            //     this.__scene.scrollTo(this.__settings);
+            //     this._scene.scrollTo(this._settings);
 
             // }, this);
 
-            // this.__scene.add(entity, this.__settings);
+            // this._scene.add(entity, this._settings);
 
             entity = new lychee.ui.Text({
                 text: 'Music: ' + (this.game.settings.music ? 'On' : 'Off'),
@@ -171,7 +171,7 @@ lychee.define('game.state.Menu').requires([
 
             }, this);
 
-            this.__scene.add(entity, this.__settings);
+            this._scene.add(entity, this._settings);
 
             entity = new lychee.ui.Text({
                 text: 'Sound: ' + (this.game.settings.sound ? 'On' : 'Off'),
@@ -191,7 +191,7 @@ lychee.define('game.state.Menu').requires([
 
             }, this);
 
-            this.__scene.add(entity, this.__settings);
+            this._scene.add(entity, this._settings);
 
 
         },
@@ -200,21 +200,21 @@ lychee.define('game.state.Menu').requires([
 
             lychee.game.State.prototype.enter.call(this);
 
-            this.__locked = true;
+            this._locked = true;
 
-            this.__scene.scrollTo(this.__welcome, function() {
-                this.__locked = false;
+            this._scene.scrollTo(this._welcome, function() {
+                this._locked = false;
             }, this);
 
-            this.__input.bind('touch', this.__processTouch, this);
-            this.__renderer.start();
+            this._input.bind('touch', this._processTouch, this);
+            this._renderer.start();
 
         },
 
         leave: function() {
 
-            this.__renderer.stop();
-            this.__input.unbind('touch', this.__processTouch);
+            this._renderer.stop();
+            this._input.unbind('touch', this._processTouch);
 
             lychee.game.State.prototype.leave.call(this);
 
@@ -222,27 +222,27 @@ lychee.define('game.state.Menu').requires([
 
         update: function(clock, delta) {
 
-            if (this.__scene !== null) {
-                this.__scene.update(clock, delta);
+            if (this._scene !== null) {
+                this._scene.update(clock, delta);
             }
 
         },
 
         render: function(clock, delta) {
 
-            this.__renderer.clear();
+            this._renderer.clear();
 
-            if (this.__scene !== null) {
-                this.__scene.render(clock, delta);
+            if (this._scene !== null) {
+                this._scene.render(clock, delta);
             }
 
-            this.__renderer.flush();
+            this._renderer.flush();
 
         },
 
-        __processTouch: function(id, position, delta) {
+        _processTouch: function(id, position, delta) {
 
-            if (this.__locked) return;
+            if (this._locked) return;
 
             var gameOffset = this.game.getOffset();
 
@@ -250,7 +250,7 @@ lychee.define('game.state.Menu').requires([
             position.y -= gameOffset.y;
 
 
-            var entity = this.__scene.getEntityByPosition(position.x, position.y, null, true);
+            var entity = this._scene.getEntityByPosition(position.x, position.y, null, true);
             if (entity !== null) {
 
                 if (this.game.settings.sound) {

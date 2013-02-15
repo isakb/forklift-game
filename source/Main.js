@@ -20,7 +20,7 @@ lychee.define('game.Main').requires([
 
         this.fonts = {};
 
-        this.__offset = { x: 0, y: 0 };
+        this._offset = { x: 0, y: 0 };
 
         this.load();
 
@@ -130,16 +130,16 @@ lychee.define('game.Main').requires([
                 }
             }, this);
 
-            this.preloader.load(this.__getUrlsFromObject(urls));
+            this.preloader.load(this._getUrlsFromObject(urls));
 
         },
 
-        __getUrlsFromObject: function(obj) {
+        _getUrlsFromObject: function(obj) {
             return _(obj).reduce(function(arr, val, key) {
                 if (_.isString(val)) {
                     arr.push(val);
                 } else {
-                    arr = arr.concat(this.__getUrlsFromObject(val));
+                    arr = arr.concat(this._getUrlsFromObject(val));
                 }
                 return arr;
             }, [], this);
@@ -166,7 +166,7 @@ lychee.define('game.Main').requires([
 
             this.renderer.reset(this.settings.width, this.settings.height, false);
 
-            this.__offset = env.offset; // Linked
+            this._offset = env.offset; // Linked
 
         },
 
@@ -249,7 +249,7 @@ lychee.define('game.Main').requires([
         },
 
         getOffset: function() {
-            return this.__offset;
+            return this._offset;
         }
 
     };

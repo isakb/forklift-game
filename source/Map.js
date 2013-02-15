@@ -8,11 +8,11 @@ lychee.define('game.Map').requires([
 
         lychee.game.Graph.call(this, game.renderer);
 
-        this.__bg1 = new lychee.ui.Graph({
+        this._bg1 = new lychee.ui.Graph({
             image: config.bg1
         });
 
-        this.__bg2 = new lychee.ui.Graph({
+        this._bg2 = new lychee.ui.Graph({
             image: config.b2
         });
 

@@ -8,7 +8,7 @@ lychee.define('game.entity.Player').requires([
 
     var Class = function(game, owner) {
 
-        this.__lastStateId = null;
+        this._lastStateId = null;
 
         this.game = game;
 
@@ -28,9 +28,9 @@ lychee.define('game.entity.Player').requires([
 
         var playerConfig = game.config.player;
 
-        this.__world = owner;
+        this._world = owner;
 
-        this.__speed = {
+        this._speed = {
             x: 0,
             y: 0
         };
@@ -47,75 +47,75 @@ lychee.define('game.entity.Player').requires([
             lychee.ui.Sprite.prototype.update.call(this, clock, delta);
 
             // Is falling or has jumped?
-            if (this.__isFalling) {
-                this.__fall();
+            if (this._isFalling) {
+                this._fall();
             }
 
-            var pos = this.__position;
+            var pos = this._position;
 
             // TODO: check if new position is valid or collides
             //
-            pos.x = this.__position.x + this.__speed.x * delta;
-            pos.y = this.__position.y + this.__speed.y * delta;
+            pos.x = this._position.x + this._speed.x * delta;
+            pos.y = this._position.y + this._speed.y * delta;
 
             // The world is "infinite" but repeating in y-axis.
-            if (this.__position.y > 15000) {
+            if (this._position.y > 15000) {
                 console.log('warping');
-                this.__position.y = -15000 + (this.__position.y - 15000);
-            } else if (this.__position.y < -15000) {
+                this._position.y = -15000 + (this._position.y - 15000);
+            } else if (this._position.y < -15000) {
                 console.log('warping');
-                this.__position.y = 15000 - (this.__position.y + 15000);
+                this._position.y = 15000 - (this._position.y + 15000);
             }
 
         },
 
-        __fall: function() {
-            this.__speed.y = (this.__speed.y + 0.015) * 0.99;
+        _fall: function() {
+            this._speed.y = (this._speed.y + 0.015) * 0.99;
         },
 
-        __checkIfCollidesWithGroundEntity: function(groundEntity) {
+        _checkIfCollidesWithGroundEntity: function(groundEntity) {
             // If currently flying up, don't attempt to collide with ground:
-            if (this.__speed.y < 0) {
+            if (this._speed.y < 0) {
                 return;
             }
 
             if (this.collidesWith(groundEntity)) {
-                this.__isFalling = false;
-                this.__speed.y = 0;
+                this._isFalling = false;
+                this._speed.y = 0;
             }
         },
 
-        __checkIfCollidesWithEnemy: function(enemy) {
+        _checkIfCollidesWithEnemy: function(enemy) {
             return this.collidesWith(enemy);
         },
 
 
         goLeft: function() {
-            if (this.__speed.x < -0.5) return;
+            if (this._speed.x < -0.5) return;
 
-            this.__speed.x -= 0.05;
+            this._speed.x -= 0.05;
 
-            if (this.__speed.x < 0) {
+            if (this._speed.x < 0) {
                 this.setState('left');
             }
         },
 
         goRight: function() {
-            if (this.__speed.x > 0.5) return;
+            if (this._speed.x > 0.5) return;
 
-            this.__speed.x += 0.05;
+            this._speed.x += 0.05;
 
-            if (this.__speed.x > 0) {
+            if (this._speed.x > 0) {
                 this.setState('right');
             }
         },
 
         goUp: function() {
-            if (this.__isFalling) {
+            if (this._isFalling) {
                 return;
             }
-            this.__isFalling = true;
-            this.__speed.y = -0.4; // impulse jump
+            this._isFalling = true;
+            this._speed.y = -0.4; // impulse jump
 
             if (this.game.settings.sound) {
                 this.game.jukebox.play('thump', 0.2);
@@ -123,11 +123,11 @@ lychee.define('game.entity.Player').requires([
         },
 
         goDown: function() {
-            this.__speed.y += 0.2;
+            this._speed.y += 0.2;
         },
 
         shoot: function() {
-            var direction = this.__state === 'left' ? -1 : 1,
+            var direction = this._state === 'left' ? -1 : 1,
                 position = this.getPosition();
 
             console.log('SHOOTING');
@@ -136,13 +136,13 @@ lychee.define('game.entity.Player').requires([
                 this.game.jukebox.play('fork', 0.5);
             }
 
-            this.__world.spawnFork({
+            this._world.spawnFork({
                 x: position.x,
                 y: position.y
             }, {
-                x: this.__speed.x,
-                y: this.__speed.y
-            }, this.__state);
+                x: this._speed.x,
+                y: this._speed.y
+            }, this._state);
 
         }
 

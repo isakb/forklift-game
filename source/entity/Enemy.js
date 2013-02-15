@@ -6,7 +6,7 @@ lychee.define('game.entity.Enemy').includes([
 
     var Class = function(settings) {
 
-        this.__lastStateId = null;
+        this._lastStateId = null;
 
         lychee.game.Sprite.call(this, settings);
 

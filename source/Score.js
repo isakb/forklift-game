@@ -6,7 +6,7 @@ lychee.define('game.Score').includes([
 
     var Class = function() {
 
-        this.__data = {
+        this._data = {
             points: 0,
             time:   0
         };
@@ -21,17 +21,17 @@ lychee.define('game.Score').includes([
         get: function(key) {
 
             if (key === undefined) {
-                return this.__data;
+                return this._data;
             } else {
-                return this.__data[key] || null;
+                return this._data[key] || null;
             }
 
         },
 
         set: function(key, value) {
 
-            this.__data[key] = value;
-            this.trigger('update', [ this.__data ]);
+            this._data[key] = value;
+            this.trigger('update', [ this._data ]);
 
         },
 
@@ -39,12 +39,12 @@ lychee.define('game.Score').includes([
 
             value = typeof value === 'number' ? value : 0;
 
-            if (this.__data[key] === undefined) {
-                this.__data[key] = 0;
+            if (this._data[key] === undefined) {
+                this._data[key] = 0;
             }
 
-            this.__data[key] += value;
-            this.trigger('update', [ this.__data ]);
+            this._data[key] += value;
+            this.trigger('update', [ this._data ]);
 
         },
 
@@ -52,12 +52,12 @@ lychee.define('game.Score').includes([
 
             value = typeof value === 'number' ? value : 0;
 
-            if (this.__data[key] === undefined) {
-                this.__data[key] = 0;
+            if (this._data[key] === undefined) {
+                this._data[key] = 0;
             }
 
-            this.__data[key] -= value;
-            this.trigger('update', [ this.__data ]);
+            this._data[key] -= value;
+            this.trigger('update', [ this._data ]);
 
         }
 

@@ -19,8 +19,8 @@ lychee.define('game.Renderer').includes([
             this.camX = offset.x;
             this.camY = offset.y;
 
-            this.centerX = this.__width / 2;
-            this.centerY = this.__height / 2;
+            this.centerX = this._width / 2;
+            this.centerY = this._height / 2;
         },
 
 
@@ -121,8 +121,8 @@ lychee.define('game.Renderer').includes([
 
             var playerPosition = playerEntity.getPosition();
             var image = bgEntity.getImage();
-            var width = bgEntity.__image.naturalWidth;
-            var height = bgEntity.__image.naturalHeight;
+            var width = bgEntity._image.naturalWidth;
+            var height = bgEntity._image.naturalHeight;
 
             var posX = 0 - this.camX * bgEntity.parallax;
             var posY = 0 - this.camY * bgEntity.parallax / 3;

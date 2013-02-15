@@ -57,7 +57,7 @@ lychee.define('game.DeviceSpecificHacks').exports(function(lychee, global) {
 			});
 
 
-			this.__autoPausedPlayback = false;
+			this._autoPausedPlayback = false;
 
 			global.addEventListener('pagehide', function() {
 
@@ -65,7 +65,7 @@ lychee.define('game.DeviceSpecificHacks').exports(function(lychee, global) {
 
 					if (that.jukebox.isPlaying('music')) {
 						that.jukebox.stop('music');
-						that.__autoPausedPlayback = true;
+						that._autoPausedPlayback = true;
 					}
 
 				}
@@ -74,9 +74,9 @@ lychee.define('game.DeviceSpecificHacks').exports(function(lychee, global) {
 
 			global.addEventListener('pageshow', function() {
 
-				if (that.__autoPausedPlayback) {
+				if (that._autoPausedPlayback) {
 					that.jukebox.play('music', true);
-					that.__autoPausedPlayback = false;
+					that._autoPausedPlayback = false;
 				}
 
 			});

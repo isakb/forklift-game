@@ -8,7 +8,7 @@ lychee.define('game.entity.Fork').requires([
 
     var Class = function(settings, game) {
 
-        this.__lastStateId = null;
+        this._lastStateId = null;
 
         this.game = game;
 
@@ -25,9 +25,9 @@ lychee.define('game.entity.Fork').requires([
 
         }, game.config.fork, settings));
 
-        this.__speed = settings.speed;
+        this._speed = settings.speed;
 
-        this.__fly();
+        this._fly();
 
     };
 
@@ -39,18 +39,18 @@ lychee.define('game.entity.Fork').requires([
 
             lychee.ui.Sprite.prototype.update.call(this, clock, delta);
 
-            this.__fly();
+            this._fly();
 
-            this.__position.x += this.__speed.x * delta;
-            this.__position.y += this.__speed.y * delta;
+            this._position.x += this._speed.x * delta;
+            this._position.y += this._speed.y * delta;
         },
 
-        __fly: function() {
-            this.__speed.x *= 50 / (50 + this.__speed.x * this.__speed.x);
-            this.__speed.y = (this.__speed.y + 0.02) * 0.99;
+        _fly: function() {
+            this._speed.x *= 50 / (50 + this._speed.x * this._speed.x);
+            this._speed.y = (this._speed.y + 0.02) * 0.99;
         },
 
-        __checkIfCollidesWithEnemy: function(enemy) {
+        _checkIfCollidesWithEnemy: function(enemy) {
             return this.collidesWith(enemy);
         }
 
