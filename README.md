@@ -1,4 +1,4 @@
-![Screenshot](https://raw.github.com/isakb/game-off-2012/master/screenshot.png)
+![Screenshot](screenshot.png)
 
 
 ## The Challenge (https://github.com/github/game-off-2012)
