@@ -325,28 +325,23 @@ lychee.define('game.state.Game').requires([
         },
 
 
-        _onKeyLeft: function(position, event) {
-            event.preventDefault();
+        _onKeyLeft: function(position) {
             this._player.goLeft();
         },
 
-        _onKeyRight: function(position, event) {
-            event.preventDefault();
+        _onKeyRight: function(position) {
             this._player.goRight();
         },
 
-        _onKeyUp: function(position, event) {
-            event.preventDefault();
+        _onKeyUp: function(position) {
             this._player.goUp();
         },
 
-        _onKeyDown: function(position, event) {
-            event.preventDefault();
+        _onKeyDown: function(position) {
             this._player.goDown();
         },
 
-        _onKeySpace: function(position, event) {
-            event.preventDefault();
+        _onKeySpace: function(position) {
             this._player.shoot();
         }
 
